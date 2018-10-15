@@ -1,0 +1,186 @@
+
+:integreatly: Integreatly
+:imagesdir: /images
+:numbered:
+:chapter-label:
+
+//urls
+:fuse-url: https://cluster-lfa3xlh.opentry.me
+:messaging-broker-url: https://console-enmasse.cluster-lfa3xlh.opentry.me/console/eval
+:openshift-url: http://employee.openshift.com/
+:sso-admin-url: https://console-keycloak.cluster-lfa3xlh.opentry.me/console/eval
+
+//services and versions
+:messaging-service: Red Hat AMQ Online
+:messaging-service-version: 7.2
+:integration-service: Fuse
+:integration-service-version: 7.1
+:api-mgmt-service: 3Scale
+:api-mgmt-service-version:
+
+
+// docs attributes
+
+// https://gitlab.cee.redhat.com/AMQ7-documentation/amq7-documentation/raw/release-amq-7.2.x/common/attributes.adoc
+:AMQ-ProductLongName: Red Hat AMQ
+:AMQ-BrokerVersion: 7.2
+
+// https://gitlab.cee.redhat.com/jboss-fuse-documentation/fuse7/raw/fuse-7.1-prod/docs/shared/attributes.adoc
+
+:Fuse-prodnamefull: Red Hat Fuse
+:Fuse-version: 7.1
+
+// https://gitlab.cee.redhat.com/red-hat-3scale-documentation/3scale-documentation/raw/up/2.3.x/docs/topics/templates/document-attributes.adoc
+:3Scale-ProductName: Red Hat 3scale
+:3Scale-ProductVersion: 2.3
+
+// https://raw.githubusercontent.com/EnMasseProject/enmasse/master/documentation/common/attributes.adoc
+
+:EnMasse-master-ProductLongName: EnMasse
+
+:walkthrough: Integrating event-driven and API-driven applications (AMQ)
+
+
+// The ID is used as an anchor for linking to the module. Avoid changing it after the module has been published to ensure existing links are not broken.
+[id='integrating-eventdriven-and-apidriven-applications']
+// If the assembly is reused in other assemblies in a guide, include {context} in the ID: [id='a-collection-of-modules-{context}'].
+
+
+
+// This assembly is included in the following assemblies:
+//
+// <List assemblies here, each on a new line>
+
+// Save the context of the assembly that is including this one.
+// This is necessary for including assemblies in assemblies.
+// See also the complementary step on the last line of this file.
+
+// Base the file name and the ID on the assembly title. For example:
+// * file name: my-assembly-a.adoc
+// * ID: [id='my-assembly-a']
+// * Title: = My assembly A
+
+// The ID is used as an anchor for linking to the module. Avoid changing it after the module has been published to ensure existing links are not broken.
+[id='creating-connections']
+// If the assembly is reused in other assemblies in a guide, include {context} in the ID: [id='a-collection-of-modules-{context}'].
+
+= Creating connections
+
+//If the assembly covers a task, start the title with a verb in the gerund form, such as Creating or Configuring.
+:context: creating-connections
+// The `context` attribute enables module reuse. Every module's ID includes {context}, which ensures that the module has a unique ID even if it is reused multiple times in a guide.
+
+
+:leveloffset: 2
+
+// Module included in the following assemblies:
+//
+// <List assemblies here, each on a new line>
+
+
+[id='creating-api-connector_{context}']
+= Creating an API Connector
+
+. Log in to the link:{fuse-url}[Red Hat Fuse Online, window="_blank"] console.
+
+. Select *Customizations* from the left hand menu.
+
+. Select the *Create API Connector* button to start the *API Client Connector* wizard.
+
+. When prompted to *Upload OpenAPI Specification*, select *Use a URL*.
+.. Enter the following in the URL field. `http://{spring-boot-url}/v2/api-docs`
+.. Click *Next*
+
+. When prompted with *Review Actions*, select *Next*.
+
+. When prompted with *Specify Security*, select *Next*.
+
+. When prompted with *Review/Edit Connector Details*
+.. Enter the following in the *Connector Name* field, `Walkthrough {walkthrough-id} CRUD Connector`.
+.. Click *Create API Connector*
+
+
+
+
+:leveloffset!:
+
+:leveloffset: 2
+
+// Module included in the following assemblies:
+//
+// <List assemblies here, each on a new line>
+
+
+[id='creating-amqp-connection-in-fuse_{context}']
+
+= Creating an AMQ connection
+
+
+
+. Log in to the link:{fuse-url}[Red Hat Fuse Online, window="_blank"] console.
+
+. Select *Connections* from the left hand menu.
+
+. Select the *Create Connection* button to start the *Create Connection* wizard.
+
+. When prompted with *Select Connector*, select *AMQ Message Broker*
+
+. When prompted with *AMQ Message Broker Configuration*
+.. Enter the following into the *Broker URL* field: `tcp://{messaging-broker-url}:61616`.
+.. Enter the following into the *User Name* field: `{messaging-username}`.
+.. Enter the following into the *Password* field: `{messaging-password}`
+.. Select `Disable` for the *Check Certificates* field.
+.. Click *Validate*
+.. Click *Next*
+
+. When prompted for *Add Connection Details*
+.. Enter the following in the *Connection Name* field, `Walkthrough {walkthrough-id} Messaging App`
+.. Click *Create*
+
+
+
+
+:leveloffset!:
+
+:leveloffset: 2
+
+// Module included in the following assemblies:
+//
+// <List assemblies here, each on a new line>
+
+
+[id='creating-http-connection-in-fuse_{context}']
+= Creating HTTP connection to CRUD App
+
+
+
+. Log in to the link:{fuse-url}[Red Hat Fuse Online, window="_blank"] console.
+
+. Select *Connections* from the left hand menu.
+
+. Select the *Create Connection* button to start the *Create Connection* wizard.
+
+. When prompted with *Select Connector*, select *Walkthrough {walkthrough-id} CRUD Connector*.
+
+. When prompted with *Walkthrough {walkthrough-id} CRUD Configuration*, click *Next*.
+
+. When prompted with *Add Connection Details*
+.. Enter the following in the *Connection Name* field, `Walkthrough {walkthrough-id} CRUD App`
+.. Click *Create*
+
+
+
+
+:leveloffset!:
+
+
+
+
+
+
+
+
+
+
+
+
