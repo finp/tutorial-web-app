@@ -108,6 +108,16 @@ class TaskPage extends React.Component {
     return verificationIds;
   };
 
+  getVerificationsForTask = task => {
+    let verifications = [];
+    task.steps.forEach(step => verifications = verifications.concat(this.getVerificationsForStep(step)));
+    return verifications;
+  }
+
+  getVerificationsForStep = step => {
+    return step.blocks.filter(block => block.isVerification);
+  }
+
   getTotalSteps = tasks => {
     let totalSteps = 0;
     tasks.forEach(task => {
