@@ -11,12 +11,15 @@ import WalkthroughResources from '../../../components/walkthroughResources/walkt
 import { prepareWalkthroughNamespace, walkthroughs, WALKTHROUGH_IDS } from '../../../services/walkthroughServices';
 import { buildNamespacedServiceInstanceName } from '../../../common/openshiftHelpers';
 import { getDocsForWalkthrough } from '../../../common/docsHelpers';
+import { retrieveOverviewFromAdoc } from '../../../common/walkthroughHelpers';
 
 class TaskPage extends React.Component {
   state = { task: 0, verifications: {}, verificationsChecked: false };
 
   componentDidMount() {
-    this.loadThread();
+    const { getWalkthrough, match: { params: { id } } } = this.props;
+    getWalkthrough(id);
+    //this.loadThread();
     const { prepareWalkthroughOne, prepareWalkthroughOneA, prepareWalkthroughTwo } = this.props;
     if (this.props.match.params.id === WALKTHROUGH_IDS.ONE) {
       prepareWalkthroughOne(this.props.middlewareServices.amqCredentials);
@@ -31,6 +34,7 @@ class TaskPage extends React.Component {
 
   componentDidUpdate() {
     const {
+      getWalkthrough,
       match: {
         params: { id, task }
       }
@@ -38,7 +42,7 @@ class TaskPage extends React.Component {
     if (!Number.isNaN(id)) {
       const parsedTask = parseInt(task, 10);
       if (id !== this.state.id || parsedTask !== this.state.task) {
-        this.loadThread();
+        //this.loadThread();
       }
     }
   }
@@ -265,14 +269,16 @@ class TaskPage extends React.Component {
     }
 
     if (thread.fulfilled && thread.data) {
-      const threadTask = thread.data.tasks[task];
-      const totalTasks = thread.data.tasks.length;
+      const { match: { params: { id, step }}} = this.props; 
+      const parsedThread = retrieveOverviewFromAdoc(thread.data);
+      const threadTask = parsedThread.tasks[task];
+      const totalTasks = parsedThread.tasks.filter(t => !t.isVerification).length;
       const loadingText = `We're initiating services for " ${thread.data.title} ". Please stand by.`;
       return (
         <React.Fragment>
           <Breadcrumb
-            threadName={thread.data.title}
-            threadId={thread.data.id}
+            threadName={parsedThread.title}
+            threadId={id}
             taskPosition={task + 1}
             totalTasks={totalTasks}
             homeClickedCallback={() => {
@@ -290,35 +296,17 @@ class TaskPage extends React.Component {
                   <div className="integr8ly-module-column--steps">
                     {threadTask.steps.map((step, i) => (
                       <React.Fragment key={i}>
-                        <AsciiDocTemplate
-                          adoc={step.stepDoc}
-                          attributes={Object.assign(
-                            {},
-                            thread.data.attributes,
-                            step.attributes,
-                            this.getDocsAttributes()
-                          )}
-                        />
-                        {step.infoVerifications &&
-                          step.infoVerifications.map(
-                            (verification, j) =>
-                              verifications[step.infoVerifications[0]] === undefined ? (
-                                <Alert type="info" className="integr8ly-module-column--steps_alert-blue" key={j}>
+                        {!step.isVerification && <div dangerouslySetInnerHTML={{ __html: step.bodyHTML }}/>}
+                        {JSON.stringify(step.isVerification)}
+                        {step.isVerification && (
+                                <Alert type="info" className="integr8ly-module-column--steps_alert-blue" key={step.bodyHTML}>
                                   <strong>{t('task.verificationTitle')}</strong>
-                                  <AsciiDocTemplate
-                                    adoc={verification}
-                                    attributes={Object.assign(
-                                      {},
-                                      thread.data.attributes,
-                                      step.attributes,
-                                      this.getDocsAttributes()
-                                    )}
-                                  />
+                                  <div dangerouslySetInnerHTML={{ __html: step.bodyHTML }}/>
                                   <ButtonGroup>
                                     <Radio
                                       name={step.stepDoc}
                                       onChange={e => {
-                                        this.handleYesVerification(e, verification);
+                                        //this.handleYesVerification(e, verification);
                                       }}
                                     >
                                       Yes
@@ -326,81 +314,15 @@ class TaskPage extends React.Component {
                                     <Radio
                                       name={step.stepDoc}
                                       onChange={e => {
-                                        this.handleNoVerification(e, verification);
+                                        //this.handleNoVerification(e, verification);
                                       }}
                                     >
                                       No
                                     </Radio>
                                   </ButtonGroup>
-                                </Alert>
-                              ) : (
-                                <Alert
-                                  type={
-                                    step.infoVerifications && verifications[step.infoVerifications[0]]
-                                      ? 'success'
-                                      : 'error'
-                                  }
-                                  className="alert alert-default"
-                                  key={j}
-                                >
-                                  <strong>{t('task.verificationTitle')}</strong>
-                                  <AsciiDocTemplate
-                                    adoc={verification}
-                                    attributes={Object.assign(
-                                      {},
-                                      thread.data.attributes,
-                                      step.attributes,
-                                      this.getDocsAttributes()
-                                    )}
-                                  />
-                                  <ButtonGroup>
-                                    <Radio
-                                      checked={
-                                        step.infoVerifications && verifications[step.infoVerifications[0]]
-                                          ? 'checked'
-                                          : ''
-                                      }
-                                      name={step.stepDoc}
-                                      onChange={e => {
-                                        this.handleYesVerification(e, verification);
-                                      }}
-                                    >
-                                      Yes
-                                    </Radio>
-                                    <Radio
-                                      checked={
-                                        step.infoVerifications && verifications[step.infoVerifications[0]]
-                                          ? ''
-                                          : 'checked'
-                                      }
-                                      name={step.stepDoc}
-                                      onChange={e => {
-                                        this.handleNoVerification(e, verification);
-                                      }}
-                                    >
-                                      No
-                                    </Radio>
-                                  </ButtonGroup>
-                                  <span
-                                    className={
-                                      step.infoVerifications && verifications[step.infoVerifications[0]]
-                                        ? 'hidden'
-                                        : 'show'
-                                    }
-                                  >
-                                    <AsciiDocTemplate
-                                      adoc={step.infoVerificationsNo ? step.infoVerificationsNo[0] : null}
-                                      attributes={Object.assign(
-                                        {},
-                                        thread.data.attributes,
-                                        step.attributes,
-                                        this.getDocsAttributes()
-                                      )}
-                                    />
-                                  </span>
                                 </Alert>
                               )
-                          )}
+                          }
                         {step.successVerifications &&
                           step.successVerifications.map((verification, c) => (
                             <Alert type="success" key={c}>
@@ -587,7 +509,8 @@ const mapDispatchToProps = dispatch => ({
     prepareWalkthroughNamespace(dispatch, walkthroughs.oneA, enmasseCredentials),
   getProgress: progress => dispatch(reduxActions.userActions.getProgress()),
   prepareWalkthroughTwo: () => prepareWalkthroughNamespace(dispatch, walkthroughs.two, null),
-  setProgress: progress => dispatch(reduxActions.userActions.setProgress(progress))
+  setProgress: progress => dispatch(reduxActions.userActions.setProgress(progress)),
+  getWalkthrough: id => dispatch(reduxActions.threadActions.getCustomThread(id))
 });
 
 const mapStateToProps = state => ({

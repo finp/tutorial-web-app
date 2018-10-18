@@ -1,8 +1,57 @@
+const fs = require('fs');
 const express = require('express');
 const path = require('path');
+const asciidoctor = require('asciidoctor.js');
+const adoc = asciidoctor();
 
 const app = express();
 const port = process.env.PORT || 5001;
+
+const walkthroughs = [];
+
+fs.readdir('./public/walkthroughs', (err, files) => {
+  files.forEach((dirName) => {
+    fs.readFile(`./public/walkthroughs/${dirName}/walkthrough.adoc`, (err, rawAdoc) => {
+      if(err) {
+        console.error(err);
+        process.exit(1);
+      }
+      const loadedAdoc = adoc.load(rawAdoc);
+      walkthroughs.push(getWalkthroughInfoFromAdoc(dirName, loadedAdoc));
+    });
+  });
+});
+
+function getWalkthroughInfoFromAdoc(dirName, adoc) {
+  
+  // Retrieve the short description. There must be a gap between the document title and the short description.
+  // Otherwise it's counted as the author field. For example, see this adoc file:
+  // ````
+  // = This is a title
+  // This is an author field
+  // This would be the revision field or something
+  // This is the short description.
+  // ````
+  // So it's better to just tell the user to put a blank line between the title and short description. 
+  let shortDescription = '';
+  if (adoc.blocks[0] && adoc.blocks[0].context === 'preamble' && adoc.blocks[0].blocks.length > 0) {
+    shortDescription = adoc.blocks[0].blocks[0].lines[0];
+  }
+
+  return {
+    id: dirName,
+    title: adoc.getDocumentTitle(),
+    shortDescription: shortDescription,
+    // description: getPreambleBlockContent(adoc),
+    time: adoc.getAttribute('time'),
+    adoc: `/public/walkthroughs/${dirName}/walkthroughs.adoc`
+  }
+}
+
+
+app.get('/customWalkthroughs', (req, res) => {
+  res.status(200).json(walkthroughs);
+});
 
 // Dynamic configuration for openshift API calls
 app.get('/config.js', (req, res) => {
