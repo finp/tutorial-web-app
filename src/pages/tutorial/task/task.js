@@ -220,9 +220,9 @@ class TaskPage extends React.Component {
 
   backToIntro = e => {
     e.preventDefault();
-    this.updateThreadState();
-    const { history } = this.props;
-    const { id } = this.state;
+    //this.updateThreadState();
+    const { history, match: { params: { id } } } = this.props;
+    //const { id } = this.state;
     history.push(`/tutorial/${id}`);
   };
 
@@ -296,33 +296,37 @@ class TaskPage extends React.Component {
                   <div className="integr8ly-module-column--steps">
                     {threadTask.steps.map((step, i) => (
                       <React.Fragment key={i}>
-                        {!step.isVerification && <div dangerouslySetInnerHTML={{ __html: step.bodyHTML }}/>}
-                        {JSON.stringify(step.isVerification)}
-                        {step.isVerification && (
-                                <Alert type="info" className="integr8ly-module-column--steps_alert-blue" key={step.bodyHTML}>
-                                  <strong>{t('task.verificationTitle')}</strong>
-                                  <div dangerouslySetInnerHTML={{ __html: step.bodyHTML }}/>
-                                  <ButtonGroup>
-                                    <Radio
-                                      name={step.stepDoc}
-                                      onChange={e => {
-                                        //this.handleYesVerification(e, verification);
-                                      }}
-                                    >
-                                      Yes
-                                    </Radio>
-                                    <Radio
-                                      name={step.stepDoc}
-                                      onChange={e => {
-                                        //this.handleNoVerification(e, verification);
-                                      }}
-                                    >
-                                      No
-                                    </Radio>
-                                  </ButtonGroup>
-                                </Alert>
-                              )
-                          }
+                        <h3>{step.title}</h3>
+                        {/* {!step.isVerification && <div dangerouslySetInnerHTML={{ __html: step.bodyHTML }}/>} */}
+                        {step.blocks.map((block, i) => (
+                          <React.Fragment key={i}>
+                            {!block.isVerification && <div dangerouslySetInnerHTML={{ __html: block.bodyHTML }}/>}
+                            {block.isVerification && (
+                              <Alert type="info" className="integr8ly-module-column--steps_alert-blue" key={step.bodyHTML}>
+                                <strong>{t('task.verificationTitle')}</strong>
+                                <div dangerouslySetInnerHTML={{ __html: block.bodyHTML }}/>
+                                <ButtonGroup>
+                                  <Radio
+                                    name={step.stepDoc}
+                                    onChange={e => {
+                                      //this.handleYesVerification(e, verification);
+                                    }}
+                                  >
+                                    Yes
+                                  </Radio>
+                                  <Radio
+                                    name={step.stepDoc}
+                                    onChange={e => {
+                                      //this.handleNoVerification(e, verification);
+                                    }}
+                                  >
+                                    No
+                                  </Radio>
+                                </ButtonGroup>
+                              </Alert>
+                            )}
+                          </React.Fragment>
+                        ))}
                         {step.successVerifications &&
                           step.successVerifications.map((verification, c) => (
                             <Alert type="success" key={c}>

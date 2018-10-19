@@ -7,6 +7,9 @@ const adoc = asciidoctor();
 const app = express();
 const port = process.env.PORT || 5001;
 
+const CONTEXT_PREAMBLE = 'preamble';
+const CONTEXT_PARAGRAPH = 'paragraph';
+
 const walkthroughs = [];
 
 fs.readdir('./public/walkthroughs', (err, files) => {
@@ -43,9 +46,20 @@ function getWalkthroughInfoFromAdoc(dirName, adoc) {
     title: adoc.getDocumentTitle(),
     shortDescription: shortDescription,
     // description: getPreambleBlockContent(adoc),
-    time: adoc.getAttribute('time'),
+    time: getTotalWalkthroughTime(adoc),
     adoc: `/public/walkthroughs/${dirName}/walkthroughs.adoc`
   }
+}
+
+const getTotalWalkthroughTime = (adoc) => {
+  let time = 0;
+  adoc.blocks.forEach(b => {
+    if (b.context === CONTEXT_PREAMBLE || b.context === CONTEXT_PARAGRAPH) {
+      return;
+    }
+    time += parseInt(b.getAttribute('time')) || 0;
+  });
+  return time;
 }
 
 

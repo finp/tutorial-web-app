@@ -32,11 +32,25 @@ const getTotalWalkthroughTime = (adoc) => {
 
 const getStepsForTask = (task) => {
   return task.blocks.map(b => {
+    if (b.context === CONTEXT_PARAGRAPH || b.context === CONTEXT_PREAMBLE) {
+      return;
+    }
+    return {
+      title: b.title,
+      isVerification: b.getAttribute('verification') === 'true',
+      bodyHTML: b.convert(),
+      blocks: getBlocksForStep(b)
+    }
+  }).filter(b => !!b);
+}
+
+const getBlocksForStep = (step) => {
+  return step.blocks.map(b => {
     return {
       isVerification: b.getAttribute('verification') === 'true',
       bodyHTML: b.convert()
     }
-  });
+  })
 }
 
 const retrieveTasksFromAdoc = (adoc) => {

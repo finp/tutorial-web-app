@@ -1,5 +1,3 @@
-:time: 30
-
 = A custom walkthrough
 
 A custom walkthrough that shows users how to do something.
@@ -15,9 +13,7 @@ This is the first task, super duper
 
 The first step needs you to do 
 
-[verification]
-=== Check that your thing works
-
+[verification=true]
 - Check this thing.
 - Check that thing
 
@@ -26,8 +22,6 @@ The first step needs you to do
 The second step needs you to do this other thing.
 
 [verification=true]
-=== Check that your other thing works
-
 Check that thing.
 
 [time=15]
