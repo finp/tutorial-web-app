@@ -109,14 +109,12 @@ class TaskPage extends React.Component {
   };
 
   getVerificationsForTask = task => {
-    let verifications = [];
-    task.steps.forEach(step => verifications = verifications.concat(this.getVerificationsForStep(step)));
-    return verifications;
-  }
+    const stepVerifications = task.steps.map(step => this.getVerificationsForStep(step));
+    // Flatten the array of arrays. Array.prototype.flat() is not IE/Edge compatible. (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flat#Browser_compatibility)
+    return [].concat(...stepVerifications);
+  };
 
-  getVerificationsForStep = step => {
-    return step.blocks.filter(block => block.isVerification);
-  }
+  getVerificationsForStep = step => step.blocks.filter(block => block.isVerification);
 
   getTotalSteps = tasks => {
     let totalSteps = 0;
