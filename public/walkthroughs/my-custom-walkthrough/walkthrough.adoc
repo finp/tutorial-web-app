@@ -80,6 +80,20 @@ the walkthrough in the extra resources section. Any step annotated with
 included in the main content. Note that verification blocks will not work in here,
 these steps are treated as raw asciidoc.
 
+[type=verificationFail]
+Breathe. Calm down. Try again. Contact your admin.
+
+[type=verificationSuccess]
+Well done. You're clearly a good person.
+
+Woop woop doop doop
+
+[type=verification]
+Check one more thing
+
+[type=verificationFail]
+Heck 'em!
+
 [time=15]
 == Second task
 
