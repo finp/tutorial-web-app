@@ -222,6 +222,20 @@ class WalkthroughTask {
     return adoc.context === CONTEXT_SECTION && adoc.level === BLOCK_LEVEL_TASK;
   }
 
+  static getShortDescription(adoc) {
+    if (adoc.blocks[0].context === CONTEXT_PARAGRAPH && adoc.blocks[0].lines.length !== 0) {
+      const {
+        blocks: [
+          {
+            lines: [shortDescription]
+          }
+        ]
+      } = adoc;
+      return shortDescription;
+    }
+    return '';
+  }
+
   static fromAdoc(adoc) {
     const title = adoc.numbered ? `${getNumberedTitle(adoc)}. ${adoc.title}` : adoc.title;
     const time = parseInt(adoc.getAttribute(BLOCK_ATTR_TIME), 10) || 0;

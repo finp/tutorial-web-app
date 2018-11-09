@@ -122,7 +122,7 @@ class TaskPage extends React.Component {
       }
     });
     return verificationIds;
-  }
+  };
 
   getTotalSteps = tasks => {
     let totalSteps = 0;

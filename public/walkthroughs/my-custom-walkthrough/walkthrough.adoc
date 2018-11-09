@@ -9,6 +9,7 @@ excluded from the short description.
 
 To start a task we need to use a h2 heading.
 
+
 == First task
 
 This is the overview for the first task in the walkthrough.
