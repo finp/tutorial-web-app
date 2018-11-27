@@ -1,0 +1,19 @@
+= Styleguide for Integreatly Walkthroughs
+
+To improve communication of your walkthrough, this style guide recommends standards that ensure consistency and promotes best practices.
+
+== Walkthrough name
+
+Use a gerund for the walkthrough name.
+
+== Task title
+
+Use a gerund for all task titles.
+
+== Step title
+
+Use a gerund for all task titles
+
+== Step procedures
+
+Use imperative for all producedure items
