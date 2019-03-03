@@ -1,8 +1,10 @@
 // This file needs to live inside src to be importable
 export default {
+// tag::amq-online[]
   'amq-online-standard': {
     prettyName: 'Red Hat AMQ Online',
     gaStatus: 'preview'
+// end::amq-online[]
   },
   fuse: {
     prettyName: 'Red Hat Fuse Online',
