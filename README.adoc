@@ -29,7 +29,7 @@ This web application provides the front door into the Inetgreatly initiative. It
 |Requirement |Version
 
 |NodeJS
-|>= 8
+|>= 10
 |===
 
 TIP: Use https://github.com/creationix/nvm/blob/master/README.md[nvm] to manage NodeJS versions locally.
