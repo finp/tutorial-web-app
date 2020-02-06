@@ -400,7 +400,7 @@ class TaskPage extends React.Component {
     if (thread.fulfilled && manifest.fulfilled && thread.data && thread.id === id) {
       const taskNum = parseInt(task, 10);
       const parsedAttrs = Object.assign({}, getDefaultAdocAttrs(id), attrs);
-      const parsedThread = parseWalkthroughAdoc(thread.data, parsedAttrs);
+      const parsedThread = parseWalkthroughAdoc(thread.data, parsedAttrs, id);
       const threadTask = parsedThread.tasks[taskNum];
       const totalTasks = parsedThread.tasks.filter(parsedTask => !parsedTask.isVerification).length;
       const taskVerificationComplete = this.taskVerificationStatus(

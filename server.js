@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const url = require('url');
 const fs = require('fs');
-const asciidoctor = require('asciidoctor.js');
+const asciidoctor = require('asciidoctor');
 const Mustache = require('mustache');
 const { fetchOpenshiftUser } = require('./server_middleware');
 const giteaClient = require('./gitea_client');
@@ -208,6 +208,17 @@ app.get('/walkthroughs/:walkthroughId/files/*', (req, res) => {
   // to abuse the file system using the wildcard file param.
   return res.sendFile(path.resolve(__dirname, `${walkthrough.basePath}`, file));
 });
+
+app.get('/walkthroughs/:walkthroughId/partials/:targetPartial', (req, res) => {
+  const { targetPartial, walkthroughId } = req.params;
+
+  const walkthrough = walkthroughs.find(wt => wt.id === walkthroughId);
+  if (!walkthrough) {
+    return res.status(404).json({ error: `Walkthrough with ID ${walkthroughId} is not found` });
+  }
+
+  return res.sendFile(path.resolve(__dirname, `${walkthrough.basePath}/../../partials`, targetPartial));
+})
 
 // Reload each walkthrough. This will clone any repo walkthroughs.
 app.post('/sync-walkthroughs', (_, res) => {

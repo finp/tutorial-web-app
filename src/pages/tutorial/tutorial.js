@@ -96,7 +96,7 @@ class TutorialPage extends React.Component {
     if (thread.fulfilled && thread.data) {
       const attrs = getDocsForWalkthrough(id, this.props.middlewareServices, this.props.walkthroughResources);
       const parsedAttrs = Object.assign({}, getDefaultAdocAttrs(id), attrs);
-      const parsedThread = parseWalkthroughAdoc(thread.data, parsedAttrs);
+      const parsedThread = parseWalkthroughAdoc(thread.data, parsedAttrs, id);
 
       return (
         <React.Fragment>

@@ -383,12 +383,12 @@ const getNumberedTitle = block => {
   return `${getNumberedTitle(block.parent)}.${block.numbered ? block.number : null}`;
 };
 
-const parseWalkthroughAdoc = (rawAdoc, attrs) => {
-  const parsedAdoc = parseAdoc(rawAdoc, attrs);
+const parseWalkthroughAdoc = (rawAdoc, attrs, id) => {
+  const parsedAdoc = parseAdoc(rawAdoc, attrs, id);
   return Walkthrough.fromAdoc(parsedAdoc);
 };
 
-const parseAdoc = (rawAdoc, attrs) => asciidoctor().load(rawAdoc, { attributes: attrs });
+const parseAdoc = (rawAdoc, attrs, id) => asciidoctor().load(rawAdoc, { attributes: attrs, safe: 'unsafe', base_dir: `/walkthroughs/${id}/` });
 
 export {
   WalkthroughTextBlock,
